@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PICPresence (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PICPresence (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
