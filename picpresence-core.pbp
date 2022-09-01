@@ -1,0 +1,98 @@
+'**********************
+'*  Name    : picpresence-core.BAS                              *
+'*  Author  : ncr6 & 16george                                   *
+'*  Notice  : Copyright (c) ncr6 & 16george                     *
+'*          : All Rights Reserved                               *
+'*  Date    : 01/09/2022                                        *
+'*  Version : 1.0                                               *
+'*  Notes   :                                                   *
+'*          :                                                   *
+'**********************
+' Set receive register to receiver enabled
+DEFINE HSER_RCSTA 90h
+
+' Set transmit register to transmitter enabled
+DEFINE HSER_TXSTA 20h
+
+' Set baud rate
+DEFINE HSER_BAUD 2400
+
+' Set SPBRG directly (normally set by HSER_BAUD)
+DEFINE HSER_SPBRG 25
+
+DEFINE OSC 4
+
+'- SET LCD
+' Set LCD Data port
+DEFINE LCD_DREG PORTB
+' Set starting Data bit (0 or 4) if 4-bit bus
+DEFINE LCD_DBIT 4
+' Set LCD Register Select port
+DEFINE LCD_RSREG PORTB
+' Set LCD Register Select bit
+DEFINE LCD_RSBIT 2
+' Set LCD Enable port
+DEFINE LCD_EREG PORTB
+' Set LCD Enable bit
+DEFINE LCD_EBIT 3
+' Set LCD bus size (4 or 8 bits)
+DEFINE LCD_BITS 4
+' Set number of lines on LCD
+DEFINE LCD_LINES 2
+' Set command delay time in us
+DEFINE LCD_COMMANDUS 2000
+' Set data delay time in us
+DEFINE LCD_DATAUS 50
+'- END LCD
+
+'-SET PREFERENCES
+
+TRISA = %11111
+TRISB = %00000001
+TRISC = %10111111
+
+'-END PREFERENCES
+
+'- VARIABLES
+
+C VAR BYTE : C = 255
+
+C0 VAR BIT
+C0_ VAR BIT
+
+C1 VAR BIT
+C1_ VAR BIT
+
+D VAR BYTE
+NUM VAR BYTE
+E VAR BIT
+TIME VAR BYTE
+TICK VAR BYTE
+TM0_E VAR BIT :TM0_E = 1
+'- END VARIABLES
+
+'- START CODE
+LCDOUT $FE, $01
+
+INIT:
+
+    C0 = PORTC.0
+    C1 = PORTC.1
+
+    HSERIN 20, FLOW, [C,D]
+    
+    FLOW:
+        IF C <> 255 THEN
+            
+            LCDOUT D
+            C = 255
+        ELSE
+            LCDOUT $FE, 128
+            
+        ENDIF
+    IF C0_ = 0 AND C0 = 1 THEN HSEROUT ["I"] 
+    IF C1_ = 0 AND C1 = 1 THEN HSEROUT ["O"] 
+    C0_ = C0 
+    C1_ = C1
+     
+GOTO INIT
