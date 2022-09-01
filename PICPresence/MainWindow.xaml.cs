@@ -14,7 +14,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WinRT;
-using PICPresence.Views;
+using PICPresence.Pages;
 using Windows.ApplicationModel;
 
 

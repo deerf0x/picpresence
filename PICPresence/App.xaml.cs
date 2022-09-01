@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -27,7 +28,11 @@ namespace PICPresence
     /// </summary>
     public partial class App : Application
     {
-        public INavigation Navigation => (INavigation)m_window;
+        public INavigation Navigation => (INavigation) m_window;
+        
+        private Window m_window;
+
+        public HttpClient client;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -36,6 +41,7 @@ namespace PICPresence
         public App()
         {
             this.InitializeComponent();
+            client = new HttpClient();
         }
 
         /// <summary>
@@ -48,7 +54,5 @@ namespace PICPresence
             m_window = new MainWindow();
             m_window.Activate();
         }
-
-        private Window m_window;
     }
 }

@@ -28,10 +28,10 @@
                     IsBackButtonVisible="Collapsed"
                     IsSettingsVisible="False">
             <NavigationView.MenuItems>
-                <NavigationViewItem Icon="Home" Content="Inicio" Tag="PICPresence.Views.HomePage" />
-                <NavigationViewItem Icon="Clock" Content="Historial de Aforo" Tag="PICPresence.Views.HistoryPage" />
-                <NavigationViewItem Icon="PostUpdate" Content="Reportes" Tag="PICPresence.Views.ReportsPage" />
-                <NavigationViewItem Icon="Street" Content="Ambientes" Tag="PICPresence.Views.RoomsPage" />
+                <NavigationViewItem Icon="Home" Content="Inicio" Tag="PICPresence.Pages.HomePage" />
+                <NavigationViewItem Icon="Street" Content="Ambientes" Tag="PICPresence.Pages.RoomsPage" />
+                <NavigationViewItem Icon="Clock" Content="Historial de Aforo" Tag="PICPresence.Pages.HistoryPage" />
+                <NavigationViewItem Icon="Sync" Content="Sincronizar con PICPresence Cloud" Tag="PICPresence.Pages.SyncPage" />
             </NavigationView.MenuItems>
             <Frame x:Name="contentFrame"/>
         </NavigationView>
