@@ -12,8 +12,8 @@
     <EnableMsixTooling>true</EnableMsixTooling>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Pages\ConnectPage.xaml" />
     <None Remove="Pages\HistoryPage.xaml" />
-    <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\RoomsPage.xaml" />
     <None Remove="Pages\SyncPage.xaml" />
   </ItemGroup>
@@ -79,7 +79,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\HomePage.xaml">
+    <Page Update="Pages\ConnectPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

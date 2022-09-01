@@ -143,7 +143,7 @@ namespace PICPresence
             // Navigates, but does not update the Menu.
             // ContentFrame.Navigate(typeof(HomePage));
 
-            SetCurrentNavigationViewItem(GetNavigationViewItems(typeof(HomePage)).First());
+            SetCurrentNavigationViewItem(GetNavigationViewItems(typeof(ConnectPage)).First());
         }
 
         private void navView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
