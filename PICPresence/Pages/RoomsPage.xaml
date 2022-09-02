@@ -15,9 +15,17 @@
         <ProgressRing x:Name="DataNotLoaded" Width="32"/>
 
         <StackPanel Orientation="Vertical" Margin="50" Spacing="16">
-            <Button Click="NewRom">
-                <TextBlock Text="Nueva Sala"/>
-            </Button>
+
+            <StackPanel Spacing="16" Width="360" Orientation="Vertical" HorizontalAlignment="Left">
+
+                <TextBox x:Name="TxbName" PlaceholderText="Nombre" Width="150" HorizontalAlignment="Left"/>
+
+                <TextBox x:Name="TxbCapacity" PlaceholderText="Aforo" Width="150" HorizontalAlignment="Left"/>
+
+                <Button Click="NewRom">
+                    <TextBlock Text="Nueva Sala"/>
+                </Button>
+            </StackPanel>
 
 
 

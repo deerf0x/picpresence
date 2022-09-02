@@ -25,6 +25,8 @@ using System.Xml.Linq;
 using picpresencelib.Core;
 using picpresencelib.Utils;
 using System.Threading;
+using System.Text.RegularExpressions;
+using Windows.UI.Core;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -67,7 +69,7 @@ namespace PICPresence.Pages
 
             var attach = new Attach(com);
 
-            attach.Run(this.R1, this.R2, 1000);
+            attach.Run(this.R1, this.R2, 1000);  
 
         }
 
@@ -77,6 +79,12 @@ namespace PICPresence.Pages
             
             CurrentRoom = RoomList[0];
         }
+
+        //private void NumberValidationTextBox(object sender, KeyEventArgs e)
+        //{
+        //    Regex regex = new Regex("[^0-9]+");
+        //    e.Handled = regex.IsMatch(TxbCapacity.Text);
+        //}
 
         private string R1()
         {
@@ -116,23 +124,29 @@ namespace PICPresence.Pages
             this.roomData.Source = RoomList;
         }
 
-        private void NewRom(object sender, RoutedEventArgs e)
+        private async void NewRom(object sender, RoutedEventArgs e)
         {
-            var rom = new Room();
+            var NewRom = new Room
+            {
+                Name = TxbName.Text,
+                MaxCapacity = int.Parse(TxbCapacity.Text),
+                CurrentCapacity = 0
+            };
 
-            rom.Name = "A5";
-            rom.CurrentCapacity = 12;
-            rom.MaxCapacity = 16;
+            var successful = await RoomFlow.Add(NewRom);
 
-            this.RoomList.Add(rom);
-
-            SetData();
+            if (successful)
+            {
+                await fetchRooms();
+            }
         }
 
         private void RoomSelect(object sender, ItemClickEventArgs e)
         {
-            Room output = e.ClickedItem as Room;
-            
+            Room roomSelected = e.ClickedItem as Room;
+
+            CurrentRoom = roomSelected;
+
         }
 
         private void ShowData(string data)

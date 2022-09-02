@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using PICPresence.Models;
+using Newtonsoft.Json;
 
 namespace PICPresence.Core
 {
@@ -37,6 +38,21 @@ namespace PICPresence.Core
             }
           
             return roomCollection;
+        }
+
+        public async Task<bool> Add(Room room)
+        {
+
+            var Json = JsonConvert.SerializeObject(room);
+
+            var Data = new StringContent(Json, Encoding.UTF8, "application/json");
+
+            using var client = new HttpClient();
+
+            var response = await client.PostAsync(url, Data);
+            var result = await response.Content.ReadAsStringAsync();
+
+            return response.StatusCode.ToString() == "OK";
         }
     }
 }
