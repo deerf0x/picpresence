@@ -16,7 +16,7 @@ const Nav: FunctionComponent<NavProps> = ({ children, items, className }) => {
     return (
         <ul className={`flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400  ${className}`}>
             {
-                items.map((item, index) => (
+                items?.map((item, index) => (
                     <li className="mr-2" key={index}>
                         <Link href={item.url} >
 
