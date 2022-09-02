@@ -38,16 +38,12 @@ namespace PICPresence.Pages
     /// </summary>
     public sealed partial class RoomsPage : Page
     {
-
+        private SerialPortFlow com;
+        private Attach attach;
         private RoomFlow RoomFlow;
         private List<Room> RoomList;
         private Room CurrentRoom;
         private String alert = "  AFORO EXCEDIDO ";
-        private readonly int BaudRate = 2400;
-        private readonly int DataBits = 8;
-        private readonly int ReceivedBytesThreshold = 1;
-        private readonly string Port = "COM1";
-        private SerialPortFlow com;
 
         public RoomsPage()
         {
@@ -57,20 +53,15 @@ namespace PICPresence.Pages
 
             InitialState();
 
-            this.com = new SerialPortFlow(
-                   Port,
-                   BaudRate,
-                   DataBits,
-                   ReceivedBytesThreshold,
-                   ListenToPIC
-                );
+            this.com = (Application.Current as App).com;
+            this.attach = (Application.Current as App).attach;
 
-            com.Open();
-
-            var attach = new Attach(com);
-
-            attach.Run(this.R1, this.R2, 1000);  
-
+            if (com != null && com.CurrentState == SerialPortFlow.State.OPEN.ToString())
+            {
+                NotConnectedInfoBar.IsOpen = false;
+                com._suscribe = PicDataReceivedHandler;
+                attach.Run(this.R1, this.R2, 1000);
+            }
         }
 
         private async void InitialState()
@@ -119,21 +110,25 @@ namespace PICPresence.Pages
             this.roomData.Source = RoomList;
         }
 
-        private async void NewRom(object sender, RoutedEventArgs e)
+        private async void NewRoom(object sender, RoutedEventArgs e)
         {
-            var NewRom = new Room
-            {
-                Name = TxbName.Text,
-                MaxCapacity = int.Parse(TxbCapacity.Text),
-                CurrentCapacity = 0
-            };
 
-            var successful = await RoomFlow.Add(NewRom);
-
-            if (successful)
+            if (TxbName.Text != "" && TxbCapacity.Text != "")
             {
-                await fetchRooms();
-                SetData();
+                var NewRoom = new Room
+                {
+                    Name = TxbName.Text,
+                    MaxCapacity = int.Parse(TxbCapacity.Text),
+                    CurrentCapacity = 0
+                };
+
+                var successful = await RoomFlow.Add(NewRoom);
+
+                if (successful)
+                {
+                    await fetchRooms();
+                    SetData();
+                }
             }
         }
 
@@ -142,12 +137,11 @@ namespace PICPresence.Pages
             Room roomSelected = e.ClickedItem as Room;
 
             CurrentRoom = roomSelected;
-
         }
 
-        private async void ListenToPIC(string data)
+        private async void PicDataReceivedHandler(string data)
         {
-            DispatcherQueue.TryEnqueue(() =>
+            DispatcherQueue.TryEnqueue(async () =>
             {
                 
                 if (checkCapacity(CurrentRoom))
@@ -160,7 +154,18 @@ namespace PICPresence.Pages
                     {
                         CurrentRoom.CurrentCapacity--;   
                     }
-                }  
+                } 
+                else
+                {
+                    var contentDialog = new ContentDialog
+                    {
+                        Title = "Capacidad Excedida",
+                        Content = "El ambiente ha alcanzado o excedido su aforo máximo",
+                        CloseButtonText = "Aceptar",
+                        XamlRoot = this.Content.XamlRoot
+                    };
+                    await contentDialog.ShowAsync();
+                }
             });
             var successful = await RoomFlow.Put(CurrentRoom);
 
@@ -174,7 +179,7 @@ namespace PICPresence.Pages
         {
             var currentCapacity = room.CurrentCapacity;
 
-            return currentCapacity <= room.MaxCapacity || currentCapacity > 0;
+            return currentCapacity <= room.MaxCapacity || currentCapacity >= 0;
         }
     }
 }

@@ -66,7 +66,7 @@ namespace PICPresence.Core
             var Data = new StringContent(Json, Encoding.UTF8, "application/json");
             using var client = new HttpClient();
 
-            var response = await client.PatchAsync("https://picpresence.ncastillo.xyz/api/collections/rooms/records/" + room.Id, Data);
+            var response = await client.PatchAsync(url + "/" + room.Id, Data);
 
             var result = await response.Content.ReadAsStringAsync();
 

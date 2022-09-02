@@ -7,6 +7,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using PICPresence.Services;
+using picpresencelib.Core;
+using picpresencelib.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +34,8 @@ namespace PICPresence
         
         private Window m_window;
 
-        public HttpClient client;
+        public SerialPortFlow com;
+        public Attach attach;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -41,7 +44,6 @@ namespace PICPresence
         public App()
         {
             this.InitializeComponent();
-            client = new HttpClient();
         }
 
         /// <summary>
