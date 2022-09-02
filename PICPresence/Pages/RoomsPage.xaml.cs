@@ -20,6 +20,11 @@ using Windows.Foundation.Collections;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PICPresence.Core;
+using System.Collections.ObjectModel;
+using System.Xml.Linq;
+using picpresencelib.Core;
+using picpresencelib.Utils;
+using System.Threading;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,20 +36,120 @@ namespace PICPresence.Pages
     /// </summary>
     public sealed partial class RoomsPage : Page
     {
-        public bool DataNotLoaded = true;
+
         private RoomFlow RoomFlow;
         private List<Room> RoomList;
+        private Room CurrentRoom;
+        private String alert = "  AFORO EXCEDIDO ";
+        private readonly int BaudRate = 2400;
+        private readonly int DataBits = 8;
+        private readonly int ReceivedBytesThreshold = 1;
+        private readonly string Port = "COM1";
+        private SerialPortFlow com;
+
         public RoomsPage()
         {
             this.InitializeComponent();
+            
             this.RoomFlow = new RoomFlow("https://picpresence.ncastillo.xyz/api/collections/rooms/records");
-            FetchRooms();
+
+            InitialState();
+
+            this.com = new SerialPortFlow(
+                   Port,
+                   BaudRate,
+                   DataBits,
+                   ReceivedBytesThreshold,
+                   ShowData
+                );
+
+            com.Open();
+
+            var attach = new Attach(com);
+
+            attach.Run(this.R1, this.R2, 1000);
+
         }
 
-        public async void FetchRooms()
+        private async void InitialState()
+        {
+            DataNotLoaded.IsActive = await fetchRooms();
+            
+            CurrentRoom = RoomList[0];
+        }
+
+        private string R1()
+        {
+            if(CurrentRoom != null)
+            {
+                return "AULA: " + CurrentRoom.Name;
+            }
+
+            return new string(' ', 16);
+        }
+
+        private string R2()
+        {
+            if (CurrentRoom != null)
+            {
+                var time = DateTime.Now.ToString("hh:mm:ss");
+
+                return " CT: " + CurrentRoom.MaxCapacity + " CA:" + CurrentRoom.CurrentCapacity +
+                            "   " + time;
+            }
+            return new string(' ', 16);
+        }
+        
+        
+        private async Task<Boolean> fetchRooms()
         {
             this.RoomList = await RoomFlow.GetRoomsAsync();
-            DataNotLoaded = RoomList.Count > 0;
+            
+            SetData();
+
+            return  !(RoomList.Count > 0);
+        }
+
+        private void SetData()
+        {
+            
+            this.roomData.Source = RoomList;
+        }
+
+        private void NewRom(object sender, RoutedEventArgs e)
+        {
+            var rom = new Room();
+
+            rom.Name = "A5";
+            rom.CurrentCapacity = 12;
+            rom.MaxCapacity = 16;
+
+            this.RoomList.Add(rom);
+
+            SetData();
+        }
+
+        private void RoomSelect(object sender, ItemClickEventArgs e)
+        {
+            Room output = e.ClickedItem as Room;
+            
+        }
+
+        private void ShowData(string data)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                SetData();
+
+                if (data == "I")
+                {
+                    CurrentRoom.CurrentCapacity++;
+                }
+                else
+                {
+                    CurrentRoom.CurrentCapacity--;
+                }
+            });
         }
     }
 }

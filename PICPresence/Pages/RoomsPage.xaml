@@ -7,10 +7,77 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
 >
+    <Page.Resources>
+        <CollectionViewSource x:Name="roomData" IsSourceGrouped="False"/>
+    </Page.Resources>
 
     <Grid>
-        <ProgressRing IsActive="{x:Bind DataNotLoaded, Mode=OneWay}" Width="32"/>
-        <StackPanel Orientation="Horizontal">
+        <ProgressRing x:Name="DataNotLoaded" Width="32"/>
+
+        <StackPanel Orientation="Vertical" Margin="50" Spacing="16">
+            <Button Click="NewRom">
+                <TextBlock Text="Nueva Sala"/>
+            </Button>
+
+
+
+            <GridView ItemsSource="{Binding Source={StaticResource roomData}}" 
+                      MaxHeight="500" 
+                      HorizontalContentAlignment="Stretch" 
+                      IsItemClickEnabled="True"
+                      ItemClick="RoomSelect">
+                <GridView.ItemTemplate>
+                    <DataTemplate >
+
+                        <StackPanel Height="160" Padding="16" Margin="0,10,50,0">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="20"
+                                   Style="{StaticResource BaseTextBlockStyle}"/>
+
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+
+                            <TextBlock Text="Aforo Maximo: " TextWrapping="NoWrap" 
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+
+                            <TextBlock Text="{Binding MaxCapacity}" TextWrapping="NoWrap" 
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+
+                            <TextBlock Text="Capacidad actual: " TextWrapping="NoWrap" 
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+
+                            <TextBlock Text="{Binding CurrentCapacity}" TextWrapping="NoWrap" 
+                                   Style="{StaticResource BodyTextBlockStyle}" />
+                            
+                        </StackPanel>
+
+                    </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid MaximumRowsOrColumns="2"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+
+
+                <GridView.GroupStyle>
+                    <GroupStyle HidesIfEmpty="True">
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <Grid Background="LightGray" Margin="0">
+                                    <TextBlock Text='{Binding Name}' 
+                                           Foreground="Black" Margin="12"
+                                           FontSize="60"    
+                                           Style="{StaticResource HeaderTextBlockStyle}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </GridView.GroupStyle>
+            </GridView>
         </StackPanel>
     </Grid>
 </Page>

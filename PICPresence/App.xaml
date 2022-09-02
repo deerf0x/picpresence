@@ -5,6 +5,7 @@
     xmlns:local="using:PICPresence">
     <Application.Resources>
         <ResourceDictionary>
+        <CornerRadius x:Key="GridViewItemCornerRadius">5</CornerRadius>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <!-- Other merged dictionaries here -->

@@ -23,25 +23,20 @@ namespace PICPresence.Core
 
         public async Task<List<Room>> GetRoomsAsync()
         {
+            List<Room> roomCollection = new List<Room>();
             try
             {
                 var response = await client.GetStringAsync(url);
 
-                List<Room> roomCollection = JObject.Parse(response)["items"].ToObject<List<Room>>();
+                roomCollection = JObject.Parse(response)["items"].ToObject<List<Room>>();
 
-                foreach (Room r in roomCollection)
-                {
-                    Debug.WriteLine("Room Name: " + r.Name);
-                }
-
-                return roomCollection;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Something went wrong: " + ex.Message);
             }
-
-            return null;
+          
+            return roomCollection;
         }
     }
 }
