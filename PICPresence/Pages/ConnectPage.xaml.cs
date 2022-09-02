@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PICPresence.Util;
 using picpresencelib.Core;
 using picpresencelib.Utils;
 using System;
@@ -29,7 +30,7 @@ namespace PICPresence.Pages
     public sealed partial class ConnectPage : Page
     {
         public SerialPortFlow com;
-        public Attach attach;
+        public Attach2 attach2;
 
         private readonly int BaudRate = 2400;
         private readonly int DataBits = 8;
@@ -42,7 +43,7 @@ namespace PICPresence.Pages
             fetchConnectedPorts();
             connectionStatus();
             this.com = (Application.Current as App).com;
-            this.attach = (Application.Current as App).attach;
+            this.attach2 = (Application.Current as App).attach2;
         }
 
 
@@ -112,7 +113,7 @@ namespace PICPresence.Pages
 
                         com.Open();
 
-                        (Application.Current as App).attach = new Attach(com);
+                        (Application.Current as App).attach2 = new Attach2(com);
 
                         connectionStatus();
 

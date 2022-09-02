@@ -27,6 +27,7 @@ using picpresencelib.Utils;
 using System.Threading;
 using System.Text.RegularExpressions;
 using Windows.UI.Core;
+using PICPresence.Util;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,7 +40,7 @@ namespace PICPresence.Pages
     public sealed partial class RoomsPage : Page
     {
         private SerialPortFlow com;
-        private Attach attach;
+        private Attach2 attach2;
         private RoomFlow RoomFlow;
         private List<Room> RoomList;
         private Room CurrentRoom;
@@ -54,13 +55,17 @@ namespace PICPresence.Pages
             InitialState();
 
             this.com = (Application.Current as App).com;
-            this.attach = (Application.Current as App).attach;
+            this.attach2 = (Application.Current as App).attach2;
 
             if (com != null && com.CurrentState == SerialPortFlow.State.OPEN.ToString())
             {
                 NotConnectedInfoBar.IsOpen = false;
                 com._suscribe = PicDataReceivedHandler;
-                attach.Run(this.R1, this.R2, 1000);
+                if (attach2.thr == null)
+                {
+                    Debug.WriteLine("ATTACH THREAD CREATED");
+                    attach2.Run(this.R1, this.R2);
+                }
             }
         }
 
@@ -75,7 +80,7 @@ namespace PICPresence.Pages
 
         private string R1()
         {
-            if(CurrentRoom != null)
+            if (CurrentRoom != null)
             {
                 return "AULA: " + CurrentRoom.Name;
             }

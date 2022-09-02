@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
 using PICPresence.Services;
+using PICPresence.Util;
 using picpresencelib.Core;
 using picpresencelib.Utils;
 using System;
@@ -35,7 +36,7 @@ namespace PICPresence
         private Window m_window;
 
         public SerialPortFlow com;
-        public Attach attach;
+        public Attach2 attach2;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
