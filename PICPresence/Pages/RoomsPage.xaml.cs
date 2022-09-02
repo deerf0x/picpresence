@@ -64,9 +64,19 @@ namespace PICPresence.Pages
                 if (attach2.thr == null)
                 {
                     Debug.WriteLine("ATTACH THREAD CREATED");
-                    attach2.Run(this.R1, this.R2);
+                    attach2.Run(this.R1, this.R2, this.ReactiveFetch);
                 }
             }
+        }
+
+        private async void ReactiveFetch()
+        {
+            await fetchRooms();
+            DispatcherQueue.TryEnqueue(() =>
+            {
+
+                SetData();
+            });
         }
 
         private async void InitialState()
@@ -111,8 +121,21 @@ namespace PICPresence.Pages
 
         private void SetData()
         {
-            
+
+            if (CurrentRoom != null)
+            {
+                var RoomFetch = RoomList.First(r => r.Id == CurrentRoom.Id);
+
+                CurrentRoom = RoomFetch;
+
+                // var index = RoomList.IndexOf(CurrentRoom);
+
+                //this.Grilla.SelectedIndex = index;
+
+            }
+
             this.roomData.Source = RoomList;
+
         }
 
         private async void NewRoom(object sender, RoutedEventArgs e)

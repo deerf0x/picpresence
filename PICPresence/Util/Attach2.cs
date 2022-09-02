@@ -15,6 +15,7 @@ namespace PICPresence.Util
         public delegate void callback();
         public Thread thr { set; get; }
         public int LCDVisibleAreaLength { get; set; }
+        public delegate void reactiveFetch();
 
         public Attach2(SerialPortFlow _serialPort, int LCDVisibleAreaLength = 16)
         {
@@ -22,13 +23,16 @@ namespace PICPresence.Util
             this.LCDVisibleAreaLength = LCDVisibleAreaLength;
         }
 
-        public void Run(addRow r1, addRow r2, int delay = 1000)
+        public void Run(addRow r1, addRow r2, reactiveFetch reactiveFetch, int delay = 1000)
         {
 
             thr = new Thread(() =>
             {
                 while (true)
-                { 
+                {
+
+                    reactiveFetch();
+
                     var _r1 = r1();
                     var _r2 = r2();
 
