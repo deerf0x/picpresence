@@ -67,6 +67,8 @@ namespace PICPresence.Pages
                     attach2.Run(this.R1, this.R2, this.ReactiveFetch);
                 }
             }
+
+            this.Grilla.SelectionChanged += Grilla_SelectionChanged;
         }
 
         private async void ReactiveFetch()
@@ -136,6 +138,14 @@ namespace PICPresence.Pages
 
             this.roomData.Source = RoomList;
 
+        }
+
+        private void Grilla_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CurrentRoom != null)
+            {
+                this.Grilla.SelectedIndex = RoomList.IndexOf(CurrentRoom);
+            }
         }
 
         private async void NewRoom(object sender, RoutedEventArgs e)

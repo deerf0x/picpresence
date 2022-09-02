@@ -47,7 +47,8 @@
                       MaxHeight="500" 
                       HorizontalContentAlignment="Stretch" 
                       IsItemClickEnabled="True"
-                      ItemClick="RoomSelect">
+                      ItemClick="RoomSelect"
+                      x:Name="Grilla">
                 <GridView.ItemTemplate>
                     <DataTemplate >
 
