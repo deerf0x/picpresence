@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using PICPresence.Models;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
+using static System.Net.WebRequestMethods;
 
 namespace PICPresence.Core
 {
@@ -51,6 +53,24 @@ namespace PICPresence.Core
 
             var response = await client.PostAsync(url, Data);
             var result = await response.Content.ReadAsStringAsync();
+            Debug.WriteLine(response.StatusCode.ToString());
+
+            return response.StatusCode.ToString() == "OK";
+        }
+
+        public async Task<bool> Put(Room room)
+        {
+
+            var Json = JsonConvert.SerializeObject(room);
+
+            var Data = new StringContent(Json, Encoding.UTF8, "application/json");
+            using var client = new HttpClient();
+
+            var response = await client.PatchAsync("https://picpresence.ncastillo.xyz/api/collections/rooms/records/" + room.Id, Data);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            Debug.WriteLine(response.StatusCode.ToString());
 
             return response.StatusCode.ToString() == "OK";
         }

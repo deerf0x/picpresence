@@ -62,7 +62,7 @@ namespace PICPresence.Pages
                    BaudRate,
                    DataBits,
                    ReceivedBytesThreshold,
-                   ShowData
+                   ListenToPIC
                 );
 
             com.Open();
@@ -76,15 +76,11 @@ namespace PICPresence.Pages
         private async void InitialState()
         {
             DataNotLoaded.IsActive = await fetchRooms();
-            
+
+            SetData();
+
             CurrentRoom = RoomList[0];
         }
-
-        //private void NumberValidationTextBox(object sender, KeyEventArgs e)
-        //{
-        //    Regex regex = new Regex("[^0-9]+");
-        //    e.Handled = regex.IsMatch(TxbCapacity.Text);
-        //}
 
         private string R1()
         {
@@ -112,8 +108,7 @@ namespace PICPresence.Pages
         private async Task<Boolean> fetchRooms()
         {
             this.RoomList = await RoomFlow.GetRoomsAsync();
-            
-            SetData();
+           
 
             return  !(RoomList.Count > 0);
         }
@@ -138,6 +133,7 @@ namespace PICPresence.Pages
             if (successful)
             {
                 await fetchRooms();
+                SetData();
             }
         }
 
@@ -149,21 +145,36 @@ namespace PICPresence.Pages
 
         }
 
-        private void ShowData(string data)
+        private async void ListenToPIC(string data)
         {
             DispatcherQueue.TryEnqueue(() =>
             {
-                SetData();
-
-                if (data == "I")
+                
+                if (checkCapacity(CurrentRoom))
                 {
-                    CurrentRoom.CurrentCapacity++;
-                }
-                else
-                {
-                    CurrentRoom.CurrentCapacity--;
-                }
+                    if (data == "I")
+                    {
+                        CurrentRoom.CurrentCapacity++;
+                    }
+                    else
+                    {
+                        CurrentRoom.CurrentCapacity--;   
+                    }
+                }  
             });
+            var successful = await RoomFlow.Put(CurrentRoom);
+
+            if (successful)
+            {
+                await fetchRooms();
+            }
+        }
+        
+        private bool checkCapacity(Room room)
+        {
+            var currentCapacity = room.CurrentCapacity;
+
+            return currentCapacity <= room.MaxCapacity || currentCapacity > 0;
         }
     }
 }
