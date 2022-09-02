@@ -90,6 +90,12 @@ namespace PICPresence.Pages
             CurrentRoom = RoomList[0];
         }
 
+
+        private string numLiteral(int raw)
+        {
+            return (raw < 10) ? "0" + raw.ToString() : raw.ToString();
+        }
+
         private string R1()
         {
             if (CurrentRoom != null)
@@ -105,8 +111,8 @@ namespace PICPresence.Pages
             if (CurrentRoom != null)
             {
                 var time = DateTime.Now.ToString("hh:mm:ss");
-
-                return " CT: " + CurrentRoom.MaxCapacity + " CA:" + CurrentRoom.CurrentCapacity +
+    
+                return " CT: " + numLiteral(CurrentRoom.MaxCapacity) + " CA:" + numLiteral(CurrentRoom.CurrentCapacity) +
                             "   " + time;
             }
             return new string(' ', 16);
@@ -169,7 +175,7 @@ namespace PICPresence.Pages
                 }
             }
         }
-
+        
         private void RoomSelect(object sender, ItemClickEventArgs e)
         {
             Room roomSelected = e.ClickedItem as Room;
