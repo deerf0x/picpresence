@@ -136,6 +136,15 @@ namespace PICPresence.Pages
 
                 CurrentRoom = RoomFetch;
 
+                if (!checkCapacity(RoomFetch))
+                {
+                    capacityExceeded.Text = "Capacidad alcanzada o excedida";
+                }
+                else
+                {
+                    capacityExceeded.Text = "";
+                }
+
                 // var index = RoomList.IndexOf(CurrentRoom);
 
                 //this.Grilla.SelectedIndex = index;
@@ -208,7 +217,14 @@ namespace PICPresence.Pages
                         CloseButtonText = "Aceptar",
                         XamlRoot = this.Content.XamlRoot
                     };
-                    await contentDialog.ShowAsync();
+                    try
+                    {
+                        await contentDialog.ShowAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("F");
+                    }
                 }
             });
             var successful = await RoomFlow.Put(CurrentRoom);
@@ -223,7 +239,13 @@ namespace PICPresence.Pages
         {
             var currentCapacity = room.CurrentCapacity;
 
-            return currentCapacity <= room.MaxCapacity || currentCapacity >= 0;
+            return currentCapacity < room.MaxCapacity;
         }
+
+        private void dataRefreshBtn_Click(object sender, RoutedEventArgs e)
+        {
+            SetData();
+        }
+
     }
 }

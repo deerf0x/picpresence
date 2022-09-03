@@ -31,7 +31,7 @@ namespace PICPresence.Util
                 while (true)
                 {
 
-                    reactiveFetch();
+                    //reactiveFetch();
 
                     var _r1 = r1();
                     var _r2 = r2();

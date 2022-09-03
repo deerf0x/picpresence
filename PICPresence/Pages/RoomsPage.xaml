@@ -39,9 +39,12 @@
                 <Button Click="NewRoom">
                     <TextBlock Text="Nueva Sala"/>
                 </Button>
+                
             </StackPanel>
 
+            <AppBarButton x:Name="dataRefreshBtn" Icon="Refresh" Height="50" Width="50" Click="dataRefreshBtn_Click"></AppBarButton>
 
+            <TextBlock x:Name="capacityExceeded"></TextBlock>
 
             <GridView ItemsSource="{Binding Source={StaticResource roomData}}" 
                       MaxHeight="500" 
